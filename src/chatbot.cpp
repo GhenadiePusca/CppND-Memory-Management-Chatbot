@@ -30,6 +30,12 @@ ChatBot::ChatBot(std::string filename)
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
 }
 
+//// STUDENT CODE
+////
+
+// Rule of five
+
+// 1: Destructor
 ChatBot::~ChatBot()
 {
     std::cout << "ChatBot Destructor" << std::endl;
@@ -42,8 +48,93 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE
-////
+// 2: Copy constructor
+ChatBot::ChatBot(const ChatBot &source) {
+  std::cout << "ChatBot copy constructor " << std::endl;
+
+  // owned resource, make deep copy
+  _image = new wxBitmap(*(source._image));
+  
+  // unowned resources, make shallow copy
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  
+  // Transfer chat logic handle
+  _chatLogic->SetChatbotHandle(this);
+}
+
+// 3: Copy assignment operator
+ChatBot& ChatBot::operator=(const ChatBot &source) {
+  std::cout << "ChatBot copy assignment constructor " << std::endl;
+
+  // handle self assignment
+  if (this == &source)
+    return *this;
+
+  // owned resource, make deep copy
+  _image = new wxBitmap(*(source._image));
+  
+  // unowned resources, make shallow copy
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  
+  // Transfer chat logic handle
+  _chatLogic->SetChatbotHandle(this);
+  
+  return *this;
+}
+
+// 4: Move constructor
+ChatBot::ChatBot(ChatBot &&source) {
+  std::cout << "ChatBot move constructor " << std::endl;
+
+  // owned resource, just move the pointer
+  _image = source._image;
+  
+  // unowned resources, make shallow copy
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  
+  // transfer chat logic handle
+  _chatLogic->SetChatbotHandle(this);
+  
+  // cleanup source
+  source._image = nullptr;
+  source._currentNode = nullptr;
+  source._rootNode = nullptr;
+  source._chatLogic = nullptr;
+}
+
+// 4: Move assignment operator
+ChatBot& ChatBot::operator=(ChatBot &&source) {
+  std::cout << "ChatBot move assignment constructor " << std::endl;
+
+  // handle self assignment
+  if (this == &source)
+    return *this;
+
+  // owned resource, just move the pointer
+  _image = source._image;
+  
+  // unowned resources, make shallow copy
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  
+  // transfer chat logic handle
+  _chatLogic->SetChatbotHandle(this);
+  
+  // cleanup source
+  source._image = nullptr;
+  source._currentNode = nullptr;
+  source._rootNode = nullptr;
+  source._chatLogic = nullptr;
+  
+  return *this;
+}
 
 ////
 //// EOF STUDENT CODE
